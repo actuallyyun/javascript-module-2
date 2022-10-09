@@ -4,6 +4,8 @@ const previousBtn = document.getElementById("previousBtn")
 const nextBtn = document.querySelector('#nextBtn')
 const autoPreviousBtn = document.querySelector('#autoPreviousBtn')
 const autoNextBtn = document.querySelector("#autoNextBtn")
+const stopBtn = document.querySelector("#stopBtn")
+let intervalId = 0
 
 //fetch image data and create a images array
 let counter = 0
@@ -40,13 +42,11 @@ const showImage = (index) => {
 const setPreviousIndex = (index) => {
     if (index < 10 && index > 0) {
         index = index - 1
-
     } else if (index === 0) {
         index = 9
     } else {
         index = 0
     }
-
     return index
 }
 
@@ -72,30 +72,34 @@ nextBtn.addEventListener('click', (e) => {
 })
 
 
+const autoPlayImage = (direction) => {
+    if (direction === 'previous') {
+        showImage(setPreviousIndex(findIndex()))
+    } else {
+        showImage(setNextIndex(findIndex()))
+    }
 
-const autoPrevious = () => {
-    setInterval(() => {
+}
 
-        let newIndex = setPreviousIndex(findIndex())
-        showImage(newIndex)
+const intervalImage = (direction) => {
+    intervalId = setInterval(() => {
+        autoPlayImage(direction)
     }, 1 * 1000)
 }
 
-
-const autoNext = () => {
-    setInterval(() => {
-        let newIndex = setNextIndex(findIndex())
-        showImage(newIndex)
-    }, 1 * 1000)
-}
 
 
 autoPreviousBtn.addEventListener('click', () => {
-    autoPrevious()
+    clearInterval(intervalId)
+    intervalImage('previous')
 })
 
 
 autoNextBtn.addEventListener('click', () => {
-    autoNext()
+    clearInterval(intervalId)
+    intervalImage('next')
 })
 
+stopBtn.addEventListener('click', () => {
+    clearInterval(intervalId)
+})
